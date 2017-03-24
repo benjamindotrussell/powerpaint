@@ -1,0 +1,23 @@
+package listenter;
+
+import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import gui.PaintPanel;
+/**
+ * 
+ * @author Ben Russell
+ * @version 11/9/2015
+ */
+public class MyMouseListener extends MouseAdapter {
+    private Shape myShape;
+    /** 
+     * listens for the mouse presses. 
+     * @param theEvent the mouse press
+     */
+    @Override
+    public void mouseClicked(final MouseEvent theEvent) {
+       
+    }
+}

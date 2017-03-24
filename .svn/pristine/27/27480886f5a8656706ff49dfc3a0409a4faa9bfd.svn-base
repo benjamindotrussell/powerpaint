@@ -1,0 +1,141 @@
+/*
+ * TCSS 305 - Assignment 5: PowerPaint
+ */
+package gui;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
+import java.util.ArrayList;
+
+//import gui.Art;
+import javax.swing.JPanel;
+
+//import listenter.MyMouseListener;
+
+
+
+/**
+ * class that implements the JPanel.
+ * 
+ * @author Ben Russell
+ * @version 11/5/2015
+ */
+public class PaintPanel extends JPanel {
+    /** A generated serialization ID. */
+    private static final long serialVersionUID = 810958738395164242L;    
+    /** A size for the JPanel. */
+    private static final Dimension PANEL_SIZE = new Dimension(400, 200);
+    /** The line width. */
+    private static final int LINE_WIDTH = 1;
+    /** The current items on the panel. */
+    private final ArrayList<Art> myFinishedArt;
+    
+    /** The path being created. */
+    private final Path2D myPath;
+    /** the image that will be drawn on. */
+    private Image myImage;
+    /** I don't know what it does I just know I need it. */
+    private Graphics myGraphics;
+    /** variable for the current x value. */
+    private int myCurrentX;
+    /** variable for the current y value. */
+    private int myCurrentY;
+    /** the old x value. */
+    private int myOldX;
+    /** the old y value. */
+    private int myOldY;
+    /**
+     * Constructor for the panel.
+     */
+    public PaintPanel() {
+        super();
+        setPreferredSize(PANEL_SIZE);
+        setBackground(Color.WHITE);
+        myPath = new GeneralPath();
+        myPath.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+        myFinishedArt = new ArrayList<Art>();
+        addMouseListener(new MyMouseListener());
+        addMouseMotionListener(new MyMouseMotionListener());
+       
+    }
+    
+    @Override
+    protected void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        if (myImage == null) {
+            myImage = createImage(getSize().width, getSize().height);
+            myGraphics = (Graphics2D) myImage.getGraphics();
+            ((Graphics2D) myGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING
+                                                       , RenderingHints.VALUE_ANTIALIAS_ON);
+            clear();
+        }
+        final Graphics2D graphics = (Graphics2D) theGraphics;
+        
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setPaint(Color.RED);
+        graphics.setStroke(new BasicStroke(LINE_WIDTH));
+        graphics.draw(myPath);
+        theGraphics.drawImage(myImage, 0, 0, null);
+    }
+    /** 
+     * method to clear old items from the panel.
+     */
+    public void clear() {
+        ((Graphics2D) myGraphics).setPaint(Color.white);
+        myGraphics.fillRect(0, 0, getSize().width, getSize().height);
+        ((Graphics2D) myGraphics).setPaint(Color.black);
+        repaint();
+    }
+    /**
+     * inner class for the mouse listener.
+     * 
+     * @author ben russell
+     */
+    private class MyMouseListener extends MouseAdapter {
+        @Override
+        public void mousePressed(final MouseEvent theEvent) {
+            myOldX = theEvent.getX();
+            myOldY = theEvent.getY();
+        }
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {
+            myCurrentX = theEvent.getX();
+            myCurrentY = theEvent.getY();
+            myGraphics.drawLine(myOldX, myOldY, myCurrentX, myCurrentY);
+            repaint();
+            myOldX = myCurrentX;
+            myOldY = myCurrentY;
+            
+        }
+
+    }
+    /**
+     * inner class for the mouse motion listener.
+     * 
+     * @author ben russell
+     */
+    private class MyMouseMotionListener extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(final MouseEvent theEvent) {
+            clear();
+            myCurrentX = theEvent.getX();
+            myCurrentY = theEvent.getY();
+            if (myGraphics != null) {
+                myGraphics.drawLine(myOldX, myOldY, myCurrentX, myCurrentY);
+            }
+            repaint();
+        }
+    }
+
+}

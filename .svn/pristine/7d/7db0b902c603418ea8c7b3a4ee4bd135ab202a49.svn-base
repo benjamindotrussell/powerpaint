@@ -1,0 +1,282 @@
+/*
+ * TCSS 305 - Assignment 5: PowerPaint
+ */
+package gui;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
+import java.util.ArrayList;
+import java.util.List;
+
+//import gui.Art;
+import javax.swing.JPanel;
+
+
+
+//import listenter.MyMouseListener;
+
+
+
+/**
+ * class that implements the JPanel.
+ * 
+ * @author Ben Russell
+ * @version 11/5/2015
+ */
+public class PaintPanel extends JPanel {
+    /** Constant used to keep track of the tool being used. */
+    private static final int PENCIL = 1;
+    /** Constant used to keep track of the tool being used. */
+    private static final int LINE = 2;
+    /** Constant used to keep track of the tool being used. */
+    private static final int RECTANGLE = 3;
+    /** Constant used to keep track of the tool being used. */
+    private static final int CIRCLE = 4;
+    /** switches between lines and circles. */
+    private static int myToolChecker;
+    /** A generated serialization ID. */
+    private static final long serialVersionUID = 810958738395164242L;    
+    /** A size for the JPanel. */
+    private static final Dimension PANEL_SIZE = new Dimension(400, 200);
+    /** The line width. */
+//    private static final int LINE_WIDTH = 1;
+//    /** An object to represent that no point is assigned. */
+    private static final Point NO_POINT = null;
+    /** The current lines on the panel. */
+    private final List<Point> myFinishedLines;
+    /** The current circles on the panel. */
+    private final List<Point> myFinishedCircles;
+    /** The current pencil marks on the panel. */
+    private final List<Path2D> myFinishedScribbles;
+    /** The current rectangles on the panel. */
+    private final List<Point> myFinishedRectangles;
+    private final List<Shape> myShapes;
+    /** The start point for the Shape. */
+    private Point myStartPoint;
+    /** The end point for the Shape. */
+    private Point myEndPoint;
+    /** The path being created. */
+    private Path2D myPath;
+    
+    
+    
+    /**
+     * Constructor for the panel.
+     */
+    public PaintPanel() {
+        super();
+        setUpPanel();
+        myFinishedLines = new ArrayList<Point>();
+        myFinishedCircles = new ArrayList<Point>();
+        myFinishedScribbles = new ArrayList<Path2D>();
+        myFinishedRectangles = new ArrayList<Point>();
+        myShapes = new ArrayList<Shape>();
+    }
+    /**
+     * sets up the panel and initializes fields.
+     * 
+     */
+    private void setUpPanel() {
+        setPreferredSize(PANEL_SIZE);
+        setBackground(Color.WHITE);
+        //myRectangle = new Rectangle2D();
+        myToolChecker = 1;
+        myPath = new GeneralPath();
+        myPath.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+        
+        
+        final MouseAdapter mouseAdapter = new PaintPanelMouseAdapter();
+        addMouseListener(mouseAdapter);
+        addMouseMotionListener(mouseAdapter);
+        
+    }
+    
+
+    /**
+     * Records the start point for a shape.
+     * 
+     * @param thePoint the start point of a shape.
+     */
+    public void recordStartPoint(final Point thePoint) {
+        myStartPoint = (Point) thePoint.clone();
+        myEndPoint = NO_POINT;
+        
+    }
+    /**
+     * Records the current position of the mouse during a drag.
+     * 
+     * @param thePoint the current point of the shape
+     */
+    public void recordDragPoint(final Point thePoint) {
+        
+        myEndPoint = (Point) thePoint.clone();
+        
+        repaint();
+        
+    }
+    /**
+     * records the position of the mouse when released.
+     * 
+     * @param thePoint end point of the shape.
+     */
+    public void recordReleasePoint(final Point thePoint) {
+//        if (myToolChecker == PENCIL) { // a pencil
+//            if (myEndPoint != null) {
+//                
+//                myFinishedScribbles.add(myPath);
+//            }
+//            myStartPoint = thePoint;
+//            myEndPoint = NO_POINT;
+//        } else if (myToolChecker == LINE) { // a line
+//          
+//            if (myEndPoint != null) { // starting a new line, so record the previous line
+//                myFinishedLines.add(myStartPoint);
+//                myFinishedLines.add(myEndPoint);
+//            }
+//            myStartPoint = thePoint;
+//            myEndPoint = NO_POINT; // still need to capture the end point
+//        } else if (myToolChecker == RECTANGLE) { // a rectangle
+//            if (myEndPoint != null) {
+//                myFinishedRectangles.add(myStartPoint);
+//                myFinishedRectangles.add(myEndPoint);
+//            }
+//            myStartPoint = thePoint;
+//            myEndPoint = NO_POINT;
+//        } else if (myToolChecker == CIRCLE) { // a circle
+//            if (myEndPoint != null) {
+//                myFinishedCircles.add(myStartPoint);
+//                myFinishedCircles.add(myEndPoint);
+//            }
+//            repaint();
+//            myStartPoint = thePoint;
+//            myEndPoint = NO_POINT;
+//        }
+        
+    }
+    /** 
+     * sets the value of the toolChecker based on the tool that is selected.
+     * 
+     * @param theTool the current tool
+     */
+    public static void setToolChecker(final int theTool) {
+        myToolChecker = theTool;
+    }
+    @Override
+    protected void paintComponent(final Graphics theGraphics) {
+        super.paintComponent(theGraphics);
+        
+        final Graphics2D graphics = (Graphics2D) theGraphics;
+        drawAll(theGraphics);
+        graphics.setColor(Color.BLUE);
+        graphics.setStroke(new BasicStroke(GUIMenuBar.getMyThickness()));
+       
+        // draw the selected shape
+        if (myToolChecker == PENCIL) {
+            graphics.draw(myPath);
+            myShapes.add(myPath);
+        } else if (myToolChecker == LINE) { // using a feature of Java 7
+            graphics.drawLine(myStartPoint.x, myStartPoint.y, myEndPoint.x, myEndPoint.y);
+            
+        } else if (myToolChecker == RECTANGLE) {
+            graphics.draw(myPath.getBounds2D());
+            myShapes.add(myPath);
+//            if (myStartPoint.x > myEndPoint.x && myStartPoint.y > myEndPoint.y) {
+//                graphics.drawRect(myEndPoint.x, myEndPoint.y
+//                                  , myStartPoint.x - myEndPoint.x
+//                                  , myStartPoint.y - myEndPoint.y);
+//            } else if (myStartPoint.x > myEndPoint.x) {
+//                
+//                graphics.drawRect(myEndPoint.x, myStartPoint.y
+//                                  , myStartPoint.x - myEndPoint.x
+//                                  , myEndPoint.y - myStartPoint.y);
+//            } else if (myStartPoint.y > myEndPoint.y) {
+//                
+//                graphics.drawRect(myStartPoint.x, myEndPoint.y
+//                                  , myEndPoint.x - myStartPoint.x
+//                                  , myStartPoint.y - myEndPoint.y);
+//            } else {
+//                graphics.drawRect(myStartPoint.x, myStartPoint.y
+//                              , myEndPoint.x - myStartPoint.x
+//                              , myEndPoint.y - myStartPoint.y);
+//            }
+//            
+//            myShapes.add(myPath.getBounds2D());
+
+        } else if (myToolChecker == CIRCLE) {
+            graphics.drawOval(myStartPoint.x, myStartPoint.y
+                              , (myEndPoint.x - myStartPoint.x) * 2
+                              , (myEndPoint.y - myStartPoint.y) * 2);
+        }
+        
+    }
+    /** 
+     * Draw all the shapes that are saved thus far.
+     * 
+     * @param theGraphics the graphics.
+     */
+    private void drawAll(final Graphics theGraphics) {
+        final Graphics2D graphics = (Graphics2D) theGraphics;
+//        for (int i = 0; i < myFinishedCircles.size(); i += 2) {
+//            final Point p1 = myFinishedCircles.get(i);
+//            final Point p2 = myFinishedCircles.get(i + 1);
+//            graphics.drawOval(p1.x, p1.y, (p2.x - p1.x) * 2, (p2.y - p1.y) * 2);
+//        } 
+//        for (int i = 0; i < myFinishedLines.size(); i += 2) {
+//            final Point p1 = myFinishedLines.get(i);
+//            final Point p2 = myFinishedLines.get(i + 1);
+//            graphics.drawLine(p1.x, p1.y, p2.x, p2.y);
+//        }
+//        for (int i = 0; i < myFinishedRectangles.size(); i += 2) {
+//            final Point r1 = myFinishedRectangles.get(i);
+//            final Point r2 = myFinishedRectangles.get(i + 1);
+//            graphics.drawRect(r1.x, r1.y, (r2.x - r1.x) * 2, (r2.y - r1.y) * 2);
+//        }
+//        for (int i = 0; i < myFinishedScribbles.size(); i++) {
+//            final Path2D path = myFinishedScribbles.get(i);
+//            graphics.draw(path);
+//        }
+        for (int i = 0; i < myShapes.size(); i++) {
+            final Shape art = myShapes.get(i);
+            graphics.draw(art);
+        }
+    }
+    /** 
+     * Mouse listener for the paint panel.
+     * 
+     * @author ben russell
+     * @version 11/18/2015
+     */
+    public class PaintPanelMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(final MouseEvent theEvent) {
+            recordStartPoint(theEvent.getPoint());
+            myPath.moveTo(theEvent.getPoint().x, theEvent.getPoint().y);
+        }
+        @Override
+        public void mouseDragged(final MouseEvent theEvent) {
+            recordDragPoint(theEvent.getPoint());
+            if (myToolChecker == PENCIL) {
+                myPath.lineTo(myEndPoint.x, myEndPoint.y);
+                repaint();
+            } else if (myToolChecker == RECTANGLE) {
+                myPath.moveTo(myEndPoint.x, myEndPoint.y);
+            }
+        }
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {
+            recordReleasePoint(theEvent.getPoint());
+            
+            myStartPoint = myEndPoint;
+        }
+    }
+}

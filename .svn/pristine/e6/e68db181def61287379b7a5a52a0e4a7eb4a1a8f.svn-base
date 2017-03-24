@@ -1,0 +1,45 @@
+/*
+ * TCSS 305 - Assignment 5: PowerPaint 
+ */
+package gui;
+
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+/**
+ * This class implements the JFrame. 
+ * 
+ * @author ben
+ * @version 11/5/2015
+ */
+public class PowerPaintGUI extends JFrame {
+    /** A generated serial version UID for object Serialization. */
+    private static final long serialVersionUID = 5756891741199164658L;
+    /** A size for the JFrame. */
+    private static final Dimension FRAME_SIZE = new Dimension(400, 300);
+    
+    
+    
+    
+    /** constructor for the PowerPaintGUI class.*/
+    public PowerPaintGUI() {
+        super("PowerPaint");
+        
+    }
+    /** start method will call the various components of the gui together. */
+    public void start() {
+        setUpPaint();
+    }
+    /** set up the paint area. */
+    private void setUpPaint() {
+        // set the close operation to exit when you close the window
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // set the sizeof the frame
+        setSize(FRAME_SIZE);
+        setLocationRelativeTo(null);
+        new PaintPanel();
+    }
+    
+}

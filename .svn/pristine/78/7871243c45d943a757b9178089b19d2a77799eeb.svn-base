@@ -1,0 +1,26 @@
+package listenter;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+/**
+ * 
+ * @author Ben Russell
+ * @version 11/9/2015
+ */
+public class MyMouseListener extends MouseAdapter {
+    /** 
+     * listens for the mouse presses. 
+     * @param theEvent the mouse press
+     */
+    public void mousePressed(final MouseEvent theEvent) {
+   
+        
+    }
+    /** 
+     * listens for the mouse releases. 
+     * @param theEvent the mouse release
+     */
+    public void mouseReleased(final MouseEvent theEvent) {
+        
+    }
+}

@@ -1,0 +1,70 @@
+/*
+ * TCSS 305 - Assignment 5: PowerPaint 
+ */
+package listenter;
+
+import gui.PaintPanel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+
+
+
+/**
+ * class that listens for someone to select the line button and then implements the 
+ * action associated with drawing a line.
+ * @author Ben Russell
+ * @version 11/8/2015
+ */
+public class Line extends AbstractAction {
+
+    /** A generated serialization ID. */
+    private static final long serialVersionUID = 5959325849437523778L;
+  
+    /** The JPanel to associate with this Action. */
+    private final PaintPanel myPanel;
+//    private Line2D myLine;
+//    private int myStartLineX;
+//    private int myStartLineY;
+    /**
+     * Construct this Action.
+     * 
+     * @param thePanel a JPanel to associate with this Action.
+     * @param theIcon the icon that will be attached to the line button.
+     */
+    public Line(final PaintPanel thePanel, final ImageIcon theIcon) {
+        super("Line", theIcon);
+        
+//        myStartLineX = 0;
+//        myStartLineY = 0;
+//        myLine = new Line2D.Double();
+        myPanel = thePanel;
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L);
+        putValue(Action.SELECTED_KEY, true);
+    }
+    
+//    public Shape start(final int theX, final int theY) {
+//        myStartLineX = theX;
+//        myStartLineY = theY;
+//        myLine = new Line2D.Double(myStartLineX, myStartLineY, myStartLineX, myStartLineY);
+//        return myLine;
+//    }
+//    public Shape move(final int theNewX, final int theNewY) {
+//        myLine.setLine(myStartLineX, myStartLineY, theNewX, theNewY);
+//        return myLine;
+//    }
+//    public Shape stop(final int endX, final int endY) {
+//        myLine.setLine(myStartLineX, myStartLineY, endX, endY);
+//        return myLine;
+//    }
+    @Override
+    public void actionPerformed(final ActionEvent thePaint) {
+        
+        myPanel.repaint();
+    }
+    
+}
+

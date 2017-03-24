@@ -1,0 +1,54 @@
+/*
+ * TCSS 305 - Assignment 5: PowerPaint 
+ */
+package listenter;
+
+import gui.PaintPanel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+
+
+
+/**
+ * class that listens for someone to select the ellipse button and then implements the actions
+ * associated with creating an ellipse.
+ * 
+ * @author Ben Russell
+ * @version 11/8/2015
+ */
+public class Ellipse extends AbstractAction {
+
+    /** A generated serialization ID. */
+    private static final long serialVersionUID = 5959325849437523778L;
+    /** constant for the number representing the tool. */
+    private static final int ELLIP = 4;
+    /** The JPanel to associate with this Action. */
+    private final PaintPanel myPanel;
+  
+    /**
+     * constructor for the EllipseListener class.
+     * 
+     * @param thePanel the JPanel this listener will be attached to
+     * @param theIcon the icon that will be attached to the ellipse button.
+     */
+    public Ellipse(final PaintPanel thePanel, final ImageIcon theIcon) {
+        super("Ellipse", theIcon);
+       
+        myPanel = thePanel;
+        putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
+        putValue(Action.SELECTED_KEY, true);
+    }
+    @Override
+    public void actionPerformed(final ActionEvent thePaint) {
+        PaintPanel.setToolChecker(ELLIP); //4 represents the Ellipse and will set the 
+                                      //  tool checker in the PaintPanel class to an Ellipse.
+        myPanel.repaint();
+    }
+    
+}
+

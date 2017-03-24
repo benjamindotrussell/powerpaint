@@ -1,0 +1,182 @@
+/*
+ * TCSS 305 - Assignment 5: PowerPaint 
+ */
+package gui;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+
+/**
+ * class that generates a menu bar for the JFrame.
+ * 
+ * @author Ben Russell
+ * @version 11/6/2015
+ */
+public class GUIMenuBar extends JMenuBar {
+    /** A generated serialization ID. */
+    private static final long serialVersionUID = -8420058521162304426L;
+
+    /** The View menu. */
+    private final JMenu myMenu;
+
+    /** A button group for radio buttons. */
+    private final ButtonGroup myButtonGroup;
+
+    /** A button to exit the program. */
+    private final JMenuItem myExitButton;
+
+    /**
+     * Construct the menu bar.
+     * 
+     * @param theFrame the JFrame which will contain this JMenuBar
+     */
+    public GUIMenuBar(final JFrame theFrame) {
+        super();
+        
+        myMenu = new JMenu("Options");
+        myButtonGroup = new ButtonGroup();
+        myExitButton = new JMenuItem("Exit");
+        
+        setup(theFrame);
+    }
+    /**
+     * Sets up the components of the menu.
+     * 
+     * @param theFrame the JFrame containing this menu.
+     */
+    private void setup(final JFrame theFrame) {
+        
+        
+  
+        
+
+        add(fileMenu(theFrame));
+        add(optionMenu(theFrame));
+        add(toolsMenu(theFrame));
+        add(helpMenu(theFrame));
+
+        
+    }
+    /**
+     * Creates a radio button menu item, associates an action with the button,
+     * adds the button to a button group, adds the button to the View menu.
+     * 
+     * @param theAction the Action to associate with the new button being
+     *            created
+     */
+    public void createMenuButton(final Action theAction) {
+        final JRadioButtonMenuItem createdButton = new JRadioButtonMenuItem(theAction);
+
+        myButtonGroup.add(createdButton);
+        myMenu.add(createdButton);
+    }
+    /**
+     * method to generate and return a JMenu.
+     * 
+     * @param theFrame the JFrame that the menu is placed on.
+     * @return fileMenu a Menu with the header File that hold the buttons undo and exit.
+     */
+    public JMenu fileMenu(final JFrame theFrame) {
+        final JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        final JMenuItem undo = new JMenuItem("Undo all changes");
+        undo.setMnemonic(KeyEvent.VK_U); 
+        
+        myExitButton.setMnemonic(KeyEvent.VK_X);
+        myExitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent theEvent) {
+                theFrame.dispatchEvent(new WindowEvent(theFrame,
+                                          WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        
+        fileMenu.add(undo);
+        fileMenu.addSeparator();
+        fileMenu.add(myExitButton);
+        
+        return fileMenu;
+    }
+    /**
+     * method to generate and return a JMenu.
+     * 
+     * @param theFrame theFrame the JFrame that the menu is placed on.
+     * @return myMenu a Menu with the header Option that holds a checkbox for the Grid a 
+     * sub-menu for Thickness and a sub-menu for the color chooser.
+     */
+    public JMenu optionMenu(final JFrame theFrame) {
+        final JCheckBoxMenuItem grid = new JCheckBoxMenuItem("Grid");
+        grid.setMnemonic(KeyEvent.VK_G);
+        final JMenu thick = new JMenu("Thickness");
+        thick.setMnemonic(KeyEvent.VK_T);
+        final JMenu color = new JMenu("Color...");
+        color.setMnemonic(KeyEvent.VK_C);
+        
+        myMenu.setMnemonic(KeyEvent.VK_O); 
+        
+        
+        myMenu.add(grid);
+        myMenu.addSeparator();
+        myMenu.add(thick);        
+        myMenu.addSeparator();
+        myMenu.add(color);
+        return myMenu;
+    }
+    /**
+     * method to generate and return a JMenu.
+     * 
+     * @param theFrame theFrame the JFrame that the menu is placed on.
+     * @return tools a Menu with the header tools that holds a radio buttons for Pencil, Line, 
+     * Rectangle and Ellipse.
+     */
+    public JMenu toolsMenu(final JFrame theFrame) {
+        final JMenu tools = new JMenu("Tools");
+        final JRadioButtonMenuItem pencil = new JRadioButtonMenuItem("Pencil");
+        pencil.setMnemonic(KeyEvent.VK_P);
+        final JRadioButtonMenuItem line = new JRadioButtonMenuItem("Line");
+        line.setMnemonic(KeyEvent.VK_L);
+        final JRadioButtonMenuItem rectangle = new JRadioButtonMenuItem("Rectangle");
+        rectangle.setMnemonic(KeyEvent.VK_R);
+        final JRadioButtonMenuItem ellipse = new JRadioButtonMenuItem("Ellipse");
+        ellipse.setMnemonic(KeyEvent.VK_E);
+        
+        tools.add(pencil);
+        tools.add(line);
+        tools.add(rectangle);
+        tools.add(ellipse);
+        
+        
+        return tools;
+    }
+    /**
+     * method to generate and return a JMenu.
+     * 
+     * @param theFrame theFrame the JFrame that the menu is placed on.
+     * @return tools a Menu with the header tools that holds a radio buttons for Pencil, Line, 
+     * Rectangle and Ellipse.
+     */
+    public JMenu helpMenu(final JFrame theFrame) {
+        final JMenu help = new JMenu("Help");
+        final JMenuItem about = new JMenuItem("About...");
+        about.setMnemonic(KeyEvent.VK_A);
+//        final JOptionPane pane = new JOptionPane();
+//        pane
+        help.add(about);
+        
+        return help;
+    }
+    
+    
+    
+}
